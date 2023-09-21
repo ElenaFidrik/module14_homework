@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>14.3</title>
+    </head>
+    <body>
+        <input id="input" type="text" placeholder="Введите число от 1 до 10" minlength=60 >
+        <button id="btn"> Кнопка </button>
+        <div id="result"></div>
+
+        <script>
+            const input = document.getElementById('input')
+            const button = document.getElementById('btn')
+            const result = document.getElementById('result')
+
+            button.addEventListener('click', function () {
+            const value = document.querySelector('input').value;
+
+            if (isNaN(value) || value < 1 || value > 10) {
+                result.innerHTML = 'Число вне диапазона от 1 до 10'
+            } else {
+                const url = `https://jsonplaceholder.typicode.com/photos?_limit=${value}`
+
+                const xhr = new XMLHttpRequest()
+
+                xhr.open('GET', url, true)
+                xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                    const data = JSON.parse(xhr.responseText)
+                    const images = data.map(item => `<img src="${item.url}" alt="Picsum Photo">`)
+                    result.innerHTML = images.join('')
+                    } else {
+                    console.error('Ошибка при получении данных:', xhr.status)
+                    result.innerHTML = 'Ошибка при получении данных'
+                    }
+                }
+                }
+                xhr.send()
+            }
+            })
+        </script>
+    </body>
+</html>

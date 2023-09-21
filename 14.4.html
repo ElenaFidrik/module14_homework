@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>14.4</title>
+        <style>
+            input {
+            width:180px
+            }
+        </style>
+    </head>
+    <body>
+        <input id="widthInput" type="text" placeholder="Введите число от 100 до 300">
+        <input id="heightInput" type="text" placeholder="Введите число от 100 до 300" >
+        <input type="submit" id="submitButton"/>
+        <div id="result"></div>
+
+        <script>
+            const widthInput = document.getElementById('widthInput')
+            const heightInput = document.getElementById('heightInput')
+            const submitButton = document.getElementById('submitButton')
+            const result = document.getElementById('result')
+
+            submitButton.addEventListener('click', function () {
+            const width = document.querySelector('#widthInput').value;
+            const height = document.querySelector('#heightInput').value;
+
+            if (isNaN(width) || isNaN(height) || width < 100 || width > 300 || height < 100 || height > 300) {
+                result.innerHTML = 'Oдно из чисел вне диапазона от 100 до 300'
+            } else {
+                const url = ` https://picsum.photos/${width}/${height}`
+                fetch(url)
+                .then((response) => {
+                    const imageElement = document.createElement('img')
+                    imageElement.src = url
+                    imageElement.alt = 'Random Image'
+                    result.innerHTML = ''
+                    result.appendChild(imageElement)
+                })
+                .catch((error) => {
+                    result.innerText = 'Ошибка при загрузке картинки'
+                })
+            }
+            })
+        </script>
+    </body>
+</html>

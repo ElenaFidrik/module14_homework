@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>14.5</title>
+    </head>
+    <body>
+        <form>
+            <fieldset>
+                <legend>Номер страницы</legend>
+                <input id="pageNumber" type="text" placeholder="Введите число от 1 до 10" style="border: none">
+            </fieldset>
+        </form>
+        <form>
+            <fieldset>
+                <legend>Лимит</legend>
+                <input id="limit" type="text" placeholder="Введите число от 1 до 10" style="border: none">
+            </fieldset>
+        </form>
+        <button id="btn" type="button">Запрос </button>
+        <div id="result"></div>
+        <script>
+            const pageNumber = document.getElementById('pageNumber')
+            const limit = document.getElementById('limit')
+            const btn = document.getElementById('btn')
+            const imageContainer = document.getElementById('imageContainer')
+            const lastQueryURL = localStorage.getItem('lastQueryURL')
+
+            if (lastQueryURL) {
+              fetchImages(lastQueryURL)
+            }
+
+            btn.addEventListener('click', function () {
+              const pageNumberValue = document.querySelector('#pageNumber').value;
+              const limitValue = document.querySelector('#limit').value;
+
+              if ((isNaN(pageNumberValue) || pageNumberValue < 1 || pageNumberValue > 10) && (isNaN(limitValue) || limitValue < 1 || limitValue > 10)) {
+                result.innerHTML = 'Номер страницы и лимит вне диапазона от 1 до 10'
+              } else if (isNaN(pageNumberValue) || pageNumberValue < 1 || pageNumberValue > 10) {
+                result.innerHTML = 'Номер страницы вне диапазона от 1 до 10'
+              } else if (isNaN(limitValue) || limitValue < 1 || limitValue > 10) {
+                result.innerHTML = 'Лимит вне диапазона от 1 до 10'
+              } else {
+                const url = `https://picsum.photos/v2/list?page=${pageNumberValue}&limit=${limitValue}`
+                fetchImages(url)
+                localStorage.setItem('lastQueryURL', url)
+              }
+            })
+
+            function fetchImages (url) {
+              fetch(url)
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data.length === 0) {
+                    result.innerHTML = 'Нет доступных изображений.'
+                  } else {
+                    const images = data.map(item => `<img src="${item.url}" alt="Picsum Photo">`)
+                    result.innerHTML = images.join('')
+                  }
+                })
+                .catch((error) => {
+                  result.innerHTML = 'Ошибка при загрузке картинок'
+                })
+            }
+        </script>
+    </body>
+</html>
